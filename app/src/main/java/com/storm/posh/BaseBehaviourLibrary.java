@@ -14,6 +14,7 @@ import com.aldebaran.qi.sdk.builder.LocalizeBuilder;
 import com.aldebaran.qi.sdk.builder.LookAtBuilder;
 import com.aldebaran.qi.sdk.builder.SayBuilder;
 import com.aldebaran.qi.sdk.builder.TransformBuilder;
+import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.object.actuation.Actuation;
 import com.aldebaran.qi.sdk.object.actuation.AttachedFrame;
 import com.aldebaran.qi.sdk.object.actuation.ExplorationMap;
@@ -38,6 +39,7 @@ import com.aldebaran.qi.sdk.object.humanawareness.HumanAwareness;
 import com.aldebaran.qi.sdk.util.FutureUtils;
 import com.storm.pepper.MainActivity;
 import com.storm.pepper.PepperLog;
+import com.storm.pepper.UISecondActivity;
 import com.storm.posh.plan.planelements.action.ActionEvent;
 import com.storm.posh.plan.planelements.Sense;
 
@@ -57,7 +59,7 @@ public class BaseBehaviourLibrary implements BehaviourLibrary, RobotLifecycleCal
     protected PepperLog pepperLog;
 
     protected QiContext qiContext;
-    protected MainActivity activity;
+    protected UISecondActivity activity;
 
     protected String currentAction;
 
@@ -139,7 +141,7 @@ public class BaseBehaviourLibrary implements BehaviourLibrary, RobotLifecycleCal
         this.pepperLog = pepperLog;
     }
 
-    public void setActivity(MainActivity activity) { this.activity = activity; }
+    public void setActivity(UISecondActivity activity) { this.activity = activity; }
 
     public void setQiContext(QiContext qiContext) {
         this.qiContext = qiContext;

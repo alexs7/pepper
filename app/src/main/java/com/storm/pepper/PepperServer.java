@@ -61,24 +61,31 @@ public class PepperServer {
     }
 
     public void sendMessage(final String message) {
-        try {
-            if (null != tempClientSocket) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        PrintWriter out = null;
-                        try {
-                            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(tempClientSocket.getOutputStream())),true);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        out.println(message);
-                    }
-                }).start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+
+
+//        if(tempClientSocket == null){
+//            System.out.println(" tempClientSocket null");
+//        }
+//        try {
+//            if (null != tempClientSocket) {
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        PrintWriter out = null;
+//                        try {
+//                            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(tempClientSocket.getOutputStream())),true);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        out.println(message);
+//                        System.out.println("My Server " + message);
+//                    }
+//                }).start();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 

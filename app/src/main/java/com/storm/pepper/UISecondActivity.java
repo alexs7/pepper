@@ -3,6 +3,7 @@ package com.storm.pepper;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,23 +15,24 @@ import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 import com.aldebaran.qi.sdk.util.FutureUtils;
-import com.storm.posh.plan.planelements.PlanElement;
-import com.storm.posh.plan.planelements.Sense;
-import com.storm.posh.plan.planelements.drives.DriveCollection;
-import com.storm.posh.plan.reader.xposh.XPOSHPlanReader;
 import com.storm.posh.BaseBehaviourLibrary;
 import com.storm.posh.Planner;
 import com.storm.posh.plan.Plan;
+import com.storm.posh.plan.planelements.PlanElement;
+import com.storm.posh.plan.planelements.Sense;
+import com.storm.posh.plan.reader.xposh.XPOSHPlanReader;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends RobotActivity implements PepperLog {
+import mehdi.sakout.fancybuttons.FancyButton;
+
+public class UISecondActivity extends RobotActivity implements PepperLog {
 
     private int mode = 0;
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = UISecondActivity.class.getSimpleName();
     private static final SimpleDateFormat logTimeFormat = new SimpleDateFormat("HH:mm:ss.SSSS");
 
     private int maxIterations = 0;
@@ -42,28 +44,30 @@ public class MainActivity extends RobotActivity implements PepperLog {
 //    private ScheduledExecutorService backgroundPingerScheduler;
 //    private ConstraintLayout rootLayout = null;
 //    private Handler generalHandler = null;
-    private TextView plannerLog;
-    private TextView checkedSenses;
-    private TextView currentDriveName;
-    private TextView currentElementName;
-    public TextView locationsLabel;
+//    private TextView plannerLog;
+//    private TextView checkedSenses;
+//    private TextView currentDriveName;
+//    private TextView currentElementName;
+//    public TextView locationsLabel;
 
     private PepperServer pepperServer;
     private BaseBehaviourLibrary behaviourLibrary;
 
-    public Button startButton;
-    public Button stopButton;
-    public Button addLocationButton;
-    public Button clearLocationsButton;
+    public FancyButton startButton;
+//    public Button stopButton;
+//    public Button addLocationButton;
+//    public Button clearLocationsButton;
 
     private ArrayList currentElements = new ArrayList();
 
-    ListView drivesList;
-    ListView elementsList;
+//    ListView drivesList;
+//    ListView elementsList;
+//
+//    DrivesListAdapter drivesAdapter;
+//    ElementsListAdapter elementsAdapter;
+//    NoElementsListAdapter noElementsAdapter;
 
-    DrivesListAdapter drivesAdapter;
-    ElementsListAdapter elementsAdapter;
-    NoElementsListAdapter noElementsAdapter;
+    private TextView serverTextView = null;
 
     private int planResourceId;
 
@@ -71,7 +75,7 @@ public class MainActivity extends RobotActivity implements PepperLog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.ui_second_activity);
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.OVERLAY);
 
 //        plannerLog = findViewById(R.id.textPlannerLog);
@@ -83,6 +87,8 @@ public class MainActivity extends RobotActivity implements PepperLog {
 
         planner = new Planner(this);
 
+
+
         // configure for chosen plan
         planResourceId = R.raw.plan_die;
         behaviourLibrary = new DieBehaviourLibrary();
@@ -91,7 +97,7 @@ public class MainActivity extends RobotActivity implements PepperLog {
         // end configure for chosen plan
 
         behaviourLibrary.setPepperLog(this);
-//        behaviourLibrary.setActivity(this);
+        behaviourLibrary.setActivity(this);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -105,45 +111,48 @@ public class MainActivity extends RobotActivity implements PepperLog {
         // Register the RobotLifecycleCallbacks to this Activity.
         QiSDK.register(this, BaseBehaviourLibrary.getInstance());
 
+        serverTextView = (TextView) findViewById(R.id.server_response);
+        serverTextView.setMovementMethod(new ScrollingMovementMethod());
+
 
         startButton = findViewById(R.id.start_button);
-        stopButton = findViewById(R.id.stop_button);
-        addLocationButton = findViewById(R.id.location_add);
-        clearLocationsButton = findViewById(R.id.locations_clear);
-        locationsLabel = findViewById(R.id.locations_label);
+//        stopButton = findViewById(R.id.stop_button);
+//        addLocationButton = findViewById(R.id.location_add);
+//        clearLocationsButton = findViewById(R.id.locations_clear);
+//        locationsLabel = findViewById(R.id.locations_label);
 
         startButton.setOnClickListener(ignore -> {
             Log.d(TAG, "Starting");
             runPlan();
         });
 
-        stopButton.setOnClickListener(ignore -> {
-            appendLog(TAG, "STOPPING");
-            stopRunningPlan = true;
+//        stopButton.setOnClickListener(ignore -> {
+//            appendLog(TAG, "STOPPING");
+//            stopRunningPlan = true;
+//
+//            behaviourLibrary.stopMoving();
+//        });
+//
+//        addLocationButton.setOnClickListener(ignore -> {
+//            appendLog("SAVING?");
+//            behaviourLibrary.saveLocation();
+//
+//        });
+//
+//        clearLocationsButton.setOnClickListener(ignore -> {
+//            appendLog("CLEARING?");
+//            behaviourLibrary.clearLocations();
+//        });
 
-            behaviourLibrary.stopMoving();
-        });
-
-        addLocationButton.setOnClickListener(ignore -> {
-            appendLog("SAVING?");
-            behaviourLibrary.saveLocation();
-
-        });
-
-        clearLocationsButton.setOnClickListener(ignore -> {
-            appendLog("CLEARING?");
-            behaviourLibrary.clearLocations();
-        });
-
-        drivesList = (ListView) findViewById(R.id.drives_list);
-        elementsList = (ListView) findViewById(R.id.elements_list);
+//        drivesList = (ListView) findViewById(R.id.drives_list);
+//        elementsList = (ListView) findViewById(R.id.elements_list);
 
         readPlan();
     }
 
     public void updateLocationsCount(int count) {
         runOnUiThread(() -> {
-            locationsLabel.setText(getResources().getString(R.string.saved_locations_count, count));
+//            locationsLabel.setText(getResources().getString(R.string.saved_locations_count, count));
         });
     }
 
@@ -260,8 +269,13 @@ public class MainActivity extends RobotActivity implements PepperLog {
 
 
         String message = String.format("ABOD3,%s,%s,%d", name, type, planner.getIteration());
+
+        System.out.println("My Server " + message);
+
+        serverTextView.append("\n" + message);
+
 //        this.appendLog(TAG, message, false);
-        pepperServer.sendMessage(message);
+        //pepperServer.sendMessage(message);
     }
 
     public void readPlan(View view) {
@@ -286,23 +300,23 @@ public class MainActivity extends RobotActivity implements PepperLog {
     private void displayPlan() {
         Plan plan = Plan.getInstance();
 
-        if (drivesAdapter == null || drivesAdapter.isStale(plan.getCurrentDrive())) {
-            drivesAdapter = new DrivesListAdapter(this, plan.getDriveCollections(), plan.getCurrentDrive());
-            drivesList.setAdapter(drivesAdapter);
-        }
-
-        if (currentElements.isEmpty()) {
-            if (noElementsAdapter == null) {
-                ArrayList noElement = new ArrayList();
-                noElement.add("Performing no action...");
-                noElementsAdapter = new NoElementsListAdapter(this, noElement);
-            }
-            elementsList.setAdapter(noElementsAdapter);
-        } else {
-//            Collections.reverse(currentElements);
-            elementsAdapter = new ElementsListAdapter(this, currentElements);
-            elementsList.setAdapter(elementsAdapter);
-        }
+//        if (drivesAdapter == null || drivesAdapter.isStale(plan.getCurrentDrive())) {
+//            drivesAdapter = new DrivesListAdapter(this, plan.getDriveCollections(), plan.getCurrentDrive());
+//            drivesList.setAdapter(drivesAdapter);
+//        }
+//
+//        if (currentElements.isEmpty()) {
+//            if (noElementsAdapter == null) {
+//                ArrayList noElement = new ArrayList();
+//                noElement.add("Performing no action...");
+//                noElementsAdapter = new NoElementsListAdapter(this, noElement);
+//            }
+//            elementsList.setAdapter(noElementsAdapter);
+//        } else {
+////            Collections.reverse(currentElements);
+//            elementsAdapter = new ElementsListAdapter(this, currentElements);
+//            elementsList.setAdapter(elementsAdapter);
+//        }
     }
 
     public void runPlan() {
