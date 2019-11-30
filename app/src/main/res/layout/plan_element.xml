@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/planElement"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="14sp"
+    android:textColor="@android:color/white"
+    android:elevation="16dp"
+    android:background="@drawable/ar_element_background"
+    android:padding="4dp">
+</TextView>
+
+    <!--android:foreground="@drawable/ar_element_foreground"-->

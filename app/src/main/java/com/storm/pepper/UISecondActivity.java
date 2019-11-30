@@ -3,18 +3,20 @@ package com.storm.pepper;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 import com.aldebaran.qi.sdk.util.FutureUtils;
+import com.alexbath.abod3ar.PlanLoader;
+import com.alexbath.abod3ar.UIPlanTree;
+import com.recklesscoding.abode.core.plan.planelements.drives.DriveCollection;
 import com.storm.posh.BaseBehaviourLibrary;
 import com.storm.posh.Planner;
 import com.storm.posh.plan.Plan;
@@ -25,6 +27,10 @@ import com.storm.posh.plan.reader.xposh.XPOSHPlanReader;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import mehdi.sakout.fancybuttons.FancyButton;
@@ -53,7 +59,14 @@ public class UISecondActivity extends RobotActivity implements PepperLog {
     private PepperServer pepperServer;
     private BaseBehaviourLibrary behaviourLibrary;
 
-    public FancyButton startButton;
+    private ConstraintLayout overlayLayout = null;
+
+    private ExecutorService backgroundColorExecutor = null;
+    private ScheduledExecutorService backgroundPingerScheduler;
+
+    private FancyButton startButton;
+    private FancyButton loadPlanButton;
+
 //    public Button stopButton;
 //    public Button addLocationButton;
 //    public Button clearLocationsButton;
@@ -70,13 +83,18 @@ public class UISecondActivity extends RobotActivity implements PepperLog {
     private TextView serverTextView = null;
 
     private int planResourceId;
-
+    private String planName;
+    private UIPlanTree uiPlanTree = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_second_activity);
+        setContentView(R.layout.activity_camera);
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.OVERLAY);
+
+        overlayLayout = findViewById(R.id.overlay_layout);
+
+        planName = "plans/Plan6.inst";
 
 //        plannerLog = findViewById(R.id.textPlannerLog);
 //        currentDriveName = findViewById(R.id.currentDrive);
@@ -86,8 +104,6 @@ public class UISecondActivity extends RobotActivity implements PepperLog {
 //        rootLayout = findViewById(R.id.root_layout);
 
         planner = new Planner(this);
-
-
 
         // configure for chosen plan
         planResourceId = R.raw.plan_die;
@@ -116,6 +132,8 @@ public class UISecondActivity extends RobotActivity implements PepperLog {
 
 
         startButton = findViewById(R.id.start_button);
+        loadPlanButton = findViewById(R.id.load_plan_button);
+
 //        stopButton = findViewById(R.id.stop_button);
 //        addLocationButton = findViewById(R.id.location_add);
 //        clearLocationsButton = findViewById(R.id.locations_clear);
@@ -125,6 +143,40 @@ public class UISecondActivity extends RobotActivity implements PepperLog {
             Log.d(TAG, "Starting");
             runPlan();
         });
+
+        loadPlanButton.setOnClickListener(v -> {
+
+            if( uiPlanTree == null) {
+
+                List<DriveCollection> driveCollections = PlanLoader.loadPlanFile(planName, getApplicationContext());
+
+                //createTree
+                uiPlanTree = new UIPlanTree(driveCollections,getApplicationContext(), overlayLayout);
+                //root = uiPlanTree.getRoot();
+                uiPlanTree.initState();
+
+                backgroundColorExecutor = Executors.newSingleThreadExecutor();
+                backgroundPingerScheduler = Executors.newSingleThreadScheduledExecutor();
+
+                backgroundColorExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Runnable backgroundPinger = new Runnable() {
+
+                            @Override
+                            public void run() {
+                                uiPlanTree.setDefaultBackgroundColorNodes();
+                            }
+                        };
+
+                        backgroundPingerScheduler.scheduleAtFixedRate(backgroundPinger, 30, 400, TimeUnit.MILLISECONDS);
+                    }
+                });
+
+            }
+        });
+
+
 
 //        stopButton.setOnClickListener(ignore -> {
 //            appendLog(TAG, "STOPPING");
