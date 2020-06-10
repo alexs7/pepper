@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import georegression.struct.point.Point2D_F64;
 
-class ARPlanElement {
+public class ARPlanElement {
 
     private final String name;
     private TextView element;

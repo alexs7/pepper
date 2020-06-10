@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.text.method.ScrollingMovementMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,6 +34,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import georegression.struct.point.Point2D_F64;
 import mehdi.sakout.fancybuttons.FancyButton;
 
 public class UISecondActivity extends RobotActivity implements PepperLog {
@@ -154,6 +156,14 @@ public class UISecondActivity extends RobotActivity implements PepperLog {
                 uiPlanTree = new UIPlanTree(driveCollections,getApplicationContext(), overlayLayout);
                 //root = uiPlanTree.getRoot();
                 uiPlanTree.initState();
+
+                uiPlanTree.setUpTree(200,200, new Point2D_F64(32, 32));
+
+//                if(uiPlanTree.getFocusedNode().getParent() != null){
+//                    drawTreeUIElementsConnectors(uiPlanTree.getFocusedNode().getParent(),canvas,viewToImage,imageCenter);
+//                }else{
+//                    drawTreeUIElementsConnectorsInitState(uiPlanTree.getRoot(),canvas,viewToImage,imageCenter);
+//                }
 
                 backgroundColorExecutor = Executors.newSingleThreadExecutor();
                 backgroundPingerScheduler = Executors.newSingleThreadScheduledExecutor();

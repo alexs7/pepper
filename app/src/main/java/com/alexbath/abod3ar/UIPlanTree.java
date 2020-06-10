@@ -25,8 +25,8 @@ public class UIPlanTree {
     public Node<ARPlanElement> root;
     private Node<ARPlanElement> focusedNode = null;
     private Stack<Node<ARPlanElement>> historyNodes = new Stack<>();
-    private int nodeWidthSeperation = 24;
-    private int nodeHeightSeperation = 16;
+    private int nodeWidthSeperation = 96;
+    private int nodeHeightSeperation = 64;
     private int flashColor = Color.CYAN;
     private int backgroundColor = Color.parseColor("#2f4f4f");
     private ArrayList<Node<ARPlanElement>> allVisibleNodes = new ArrayList<Node<ARPlanElement>>();
