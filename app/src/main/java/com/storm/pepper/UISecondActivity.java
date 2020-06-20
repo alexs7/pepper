@@ -157,7 +157,7 @@ public class UISecondActivity extends RobotActivity implements PepperLog {
                 //root = uiPlanTree.getRoot();
                 uiPlanTree.initState();
 
-                uiPlanTree.setUpTree(200,200, new Point2D_F64(32, 32));
+                uiPlanTree.setUpTree(200,100, new Point2D_F64(32, 32));
 
 //                if(uiPlanTree.getFocusedNode().getParent() != null){
 //                    drawTreeUIElementsConnectors(uiPlanTree.getFocusedNode().getParent(),canvas,viewToImage,imageCenter);
