@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import georegression.struct.point.Point2D_F64;
 import mehdi.sakout.fancybuttons.FancyButton;
 
+//THIS PROJECT TO USE!
 public class UISecondActivity extends RobotActivity implements PepperLog {
 
     private int mode = 0;
